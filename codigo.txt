@@ -1,0 +1,57 @@
+turtles-own[resistencia] 
+globals [vida] 
+breed [personas persona]
+breed [hormigas hormiga]
+
+
+to configuracion
+  clear-all
+  reset-ticks
+  create-hormigas random 20 + 40 [
+    set shape "fish"
+    setxy random-xcor random-ycor
+    set resistencia 10
+    set vida 43
+  ]
+  create-personas 2 [
+    set shape "bug"
+    setxy random-xcor random-ycor
+  ]
+  ask patches[set pcolor green]
+end
+
+to mover 
+  forward 1
+  set heading 50
+end 
+
+to movertortugas
+  set vida vida - 1
+  ask hormigas[
+    forward 1
+    set resistencia resistencia - 1 
+    set heading random 360
+    if (pcolor = green)[
+     set pcolor blue
+     set resistencia resistencia + 3
+    ] 
+    if (resistencia = 0)[
+       show "Se murieron por cansancio"
+      die
+    ]
+    if (vida = 0)[
+        show "Se murieron por la edad"
+      die
+    ]
+    if any? other hormigas-here [
+      show "Se murieron por accidente"
+      ask hormigas-here [die]
+    ]
+  ]
+  ask personas[
+      forward 1
+      set heading random 360
+      set pcolor green  
+    ]
+end
+
